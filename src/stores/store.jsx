@@ -31,7 +31,7 @@ class Store {
           address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
           decimals: "18",
           symbol: "WBNB",
-          price_id: 'ethereum',
+          price_id: 'binance-coin',
         },
         {
           address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
@@ -56,7 +56,7 @@ class Store {
           address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
           decimals: "18",
           symbol: "BUSD",
-          price_id: 'binanceusd',
+          price_id: 'binance-usd',
         },
         {
           address: "0x1092E4F72a9D7a28418351D029e273906aF24797",
@@ -68,13 +68,13 @@ class Store {
           address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
           decimals: "18",
           symbol: "Cake",
-          price_id: 'cake',
+          price_id: 'pancakeswap',
         },
         {
           address: "0xaDD8A06fd58761A5047426e160B2B88AD3B9D464",
           decimals: "18",
           symbol: "CHS",
-          price_id: 'cheese',
+          price_id: 'pancakeswap',
         },
         
          ],
@@ -222,7 +222,7 @@ class Store {
           decimals: await token1Contract.methods.decimals().call({})
         }
       }
-      if (token0.symbol == "WETH") {
+      if (token0.symbol == "WBNB") {
       console.log(token0);
         return {
           token0: token1,
@@ -286,7 +286,7 @@ class Store {
 
   _getUSDPrices = async () => {
     try {
-      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,usd-coin,true-usd,tether,yearn-finance,wrapped-bitcoin,ethereum,aave,uniswap,compound-governance-token,maker,havven,curve-dao-token,keep3rV1,link&vs_currencies=usd'
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,usd-coin,binance-coin,tether,binance-usd,wrapped-bitcoin,ethereum,aave,uniswap,compound-governance-token,maker,havven,curve-dao-token,keep3rV1,link&vs_currencies=usd'
       const priceString = await rp(url);
       const priceJSON = JSON.parse(priceString)
 
