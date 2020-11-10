@@ -62,7 +62,7 @@ class Store {
           address: "0x1092E4F72a9D7a28418351D029e273906aF24797",
           decimals: "18",
           symbol: "KP3RB",
-          price_id: 'Keep3rb',
+          price_id: 'uniswap',
         },
         {
           address: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
