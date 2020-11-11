@@ -121,6 +121,19 @@ const styles = theme => ({
    
     alignItems: 'center',
       },
+    accountDetailsHeader1: {
+    color: colors.lightGreen,
+    fontWeight: 'bold',
+    fontSize: '20px',
+    align: 'center',
+    marginTop: '10px',
+    padding: '0 0 0 5%',
+    cursor: 'pointer',
+   
+    alignItems: 'center',
+      },
+
+   
   accountDetailsBalance: {
     color: colors.background,
     fontWeight: 'bold',
@@ -163,7 +176,8 @@ class Header extends Component {
            Keep3rb Network BSC | Real time Price data from Oracle <br />
            <hr />
           </div>
-          <div className={ classes.account }>
+          <div className={ classes.accountDetailsHeader1 }>
+           <a href="https://keep3rb.network"><b> KEEP3RB.NETWORK </b></a>
           </div>
         </div>
       </div>
