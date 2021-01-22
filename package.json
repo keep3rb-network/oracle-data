@@ -1,7 +1,6 @@
 {
-  "homepage": "./",
-  "name": "price-feed",
-  "version": "0.0.1",
+  "name": "kp3rb-oracle",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",

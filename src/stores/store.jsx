@@ -8,8 +8,8 @@ import {
 } from '../constants';
 
 import { ERC20ABI } from "./abi/erc20ABI";
-import { CheeseSwapOracleABI } from './abi/cheeseswapOracleABI';
 import { CheeseSwapPairABI } from './abi/cheeseswapPairABI';
+import { Keep3rbOracleABI } from './abi/keep3rbOracleABI'
 
 import Web3 from 'web3';
 const web3 = new Web3(config.provider)
@@ -51,7 +51,7 @@ class Store {
           symbol: "DAI",
           price_id: 'dai',
         },
-       
+
         {
           address: "0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56",
           decimals: "18",
@@ -70,8 +70,7 @@ class Store {
           symbol: "CHS",
           price_id: 'pancakeswap',
         },
-        
-         ],
+        ],
       priceFeeds: [
 
       ]
@@ -80,7 +79,7 @@ class Store {
     dispatcher.register(
       function (payload) {
         switch (payload.type) {
-          case GET_FEEDS:
+          default:case GET_FEEDS:
             this.getFeeds(payload);
             break;
         }
@@ -100,9 +99,6 @@ class Store {
 
   //get pairs
 
-
-
-
   // get hard-coded address to { decimals, name, icon }
   // populate pair token info
   // get missing pair token info
@@ -114,8 +110,8 @@ class Store {
 
   getFeeds = async () => {
     try {
-      const cheeseswapOracleContract = new web3.eth.Contract(CheeseSwapOracleABI, config.cheeseswaporacleAddress)
-      const pairs = await cheeseswapOracleContract.methods.pairs().call({})
+      const uniOracleContract = new web3.eth.Contract(Keep3rbOracleABI, config.keep3rbOracleAddress)
+      const pairs = await uniOracleContract.methods.pairs().call({})
 
       if(!pairs || pairs.length === 0) {
         return emitter.emit(FEEDS_RETURNED)
@@ -124,24 +120,21 @@ class Store {
       store.setStore({ feeds: pairs })
       emitter.emit(FEEDS_UPDATED)
 
-
       const usdPrices = await this._getUSDPrices()
-      console.log(usdPrices)
 
       async.map(pairs, async (pair, callback) => {
 
         let pairPopulated = await this._populatePairsTokens(pair)
         pairPopulated.address = pair
 
-        console.log(pairPopulated)
-
         let consult = await this._getConsult(pairPopulated)
         pairPopulated.consult = consult
-        console.log(consult)
 
         let lastUpdated = await this._getLastUpdated(pairPopulated)
-        pairPopulated.lastUpdated = lastUpdated
-        console.log(lastUpdated)
+        pairPopulated.lastUpdated = lastUpdated.timestamp
+
+        let volatility = await this._getVolatility(pairPopulated)
+        pairPopulated.volatility = volatility
 
         const usdPrice0 = usdPrices[pairPopulated.token0.price_id]
         const usdPrice1 = usdPrices[pairPopulated.token1.price_id]
@@ -162,7 +155,6 @@ class Store {
         if(err) {
           console.log(err)
         }
-        console.log(pairsData)
         store.setStore({ feeds: pairsData })
         emitter.emit(FEEDS_RETURNED)
       })
@@ -216,8 +208,7 @@ class Store {
           decimals: await token1Contract.methods.decimals().call({})
         }
       }
-      if (token0.symbol == "ETH") {
-      console.log(token0);
+      if (token0.symbol === "WETH") {
         return {
           token0: token1,
           token1: token0
@@ -243,13 +234,13 @@ class Store {
   _getConsult = async (pair) => {
     try {
 
-      const cheeseswapOracleContract = new web3.eth.Contract(CheeseSwapOracleABI, config.unioracleAddress)
+      const uniOracleContract = new web3.eth.Contract(Keep3rbOracleABI, config.keep3rbOracleAddress)
 
       let sendAmount0 = (10**pair.token0.decimals).toFixed(0)
       let sendAmount1 = (10**pair.token1.decimals).toFixed(0)
 
-      const consult0To1 = await cheeseswapOracleContract.methods.consult(pair.token0.address, sendAmount0, pair.token1.address).call({ })
-      const consult1To0 = await cheeseswapOracleContract.methods.consult(pair.token1.address, sendAmount1, pair.token0.address).call({ })
+      const consult0To1 = await uniOracleContract.methods.current(pair.token0.address, sendAmount0, pair.token1.address).call({ })
+      const consult1To0 = await uniOracleContract.methods.current(pair.token1.address, sendAmount1, pair.token0.address).call({ })
 
       return {
         consult0To1: consult0To1/10**pair.token1.decimals,
@@ -268,23 +259,59 @@ class Store {
 
   _getLastUpdated = async (pair) => {
     try {
-      const cheeseswapOracleContract = new web3.eth.Contract(CheeseSwapOracleABI, config.cheeseswaporacleAddress)
+      const uniOracleContract = new web3.eth.Contract(Keep3rbOracleABI, config.keep3rbOracleAddress)
 
-      const lastUpdated = await cheeseswapOracleContract.methods.lastUpdated(pair.address).call({ })
+      const lastUpdated = await uniOracleContract.methods.lastObservation(pair.address).call({ })
 
       return lastUpdated
     } catch(e) {
-      return 0
+      return { timestamp: 0 }
+    }
+  }
+
+  _getVolatility = async (pair) => {
+    const keep3rbOracleContract = new web3.eth.Contract(Keep3rbOracleABI, config.keep3rbOracleAddress)
+    const sendAmount = (10**pair.token0.decimals).toFixed(0)
+
+    try {
+      const realizedVolatilityHourly = await keep3rbOracleContract.methods.realizedVolatilityHourly(pair.token0.address, sendAmount, pair.token1.address).call({ })
+      const realizedVolatilityDaily = await keep3rbOracleContract.methods.realizedVolatilityDaily(pair.token0.address, sendAmount, pair.token1.address).call({ })
+      const realizedVolatilityWeekly = await keep3rbOracleContract.methods.realizedVolatilityWeekly(pair.token0.address, sendAmount, pair.token1.address).call({ })
+
+      return {
+        realizedVolatilityHourly: realizedVolatilityHourly/1e18,
+        realizedVolatilityDaily: realizedVolatilityDaily/1e18,
+        realizedVolatilityWeekly: realizedVolatilityWeekly/1e18 }
+    } catch(e) {
+      console.log(e)
+
+      try {
+        const realizedVolatility = await keep3rbOracleContract.methods.realizedVolatility(pair.token0.address, sendAmount, pair.token1.address, 24, 2).call({ })
+
+        return {
+          realizedVolatility: realizedVolatility/1e18,
+          realizedVolatilityHourly: null,
+          realizedVolatilityDaily: null,
+          realizedVolatilityWeekly: null,
+        }
+      } catch(ex) {
+        console.log(ex)
+        return {
+          realizedVolatility: null,
+          realizedVolatilityHourly: null,
+          realizedVolatilityDaily: null,
+          realizedVolatilityWeekly: null,
+          err: ex
+        }
+      }
     }
   }
 
   _getUSDPrices = async () => {
     try {
-      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,usd-coin,wbnb,tether,binance-usd,uniswap&vs_currencies=usd'
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,usd-coin,true-usd,tether,yearn-finance,wrapped-bitcoin,ethereum,aave,uniswap,compound-governance-token,maker,havven,keep3rb,link&vs_currencies=usd'
       const priceString = await rp(url);
       const priceJSON = JSON.parse(priceString)
-
-      console.log(priceJSON)
 
       return priceJSON
     } catch(e) {

@@ -1,15 +1,15 @@
 import createBreakpoints from '@material-ui/core/styles/createBreakpoints'
 
-import WorkSansTTF from '../assets/fonts/WorkSans-VariableFont_wght.ttf';
+import WorkSansTTF from '../assets/fonts/Rajdhani-Medium.ttf';
 
 const WorkSans = {
-  fontFamily: 'Work Sans Thin',
+  fontFamily: 'Rajdhani Medium',
   fontStyle: 'normal',
   fontDisplay: 'swap',
   fontWeight: 400,
   src: `
-    local('Work Sans Thin'),
-    local('Work Sans Thin'),
+    local('Rajdhani Medium'),
+    local('Rajdhani Medium'),
     url(${WorkSansTTF}) format('truetype')
   `,
   unicodeRange:
@@ -17,11 +17,12 @@ const WorkSans = {
 };
 
 export const colors = {
+  pricecolor: '#171819',
   white: "#fff",
   black: '#000',
-  blue: "#2F80ED",
-  lightGray: "rgb(244, 245, 246);",
-  darkGray: "rgba(43,57,84,.5)",
+  blue: "#383633",
+  lightGray: "#EEC542;",
+  darkGray: "rgba(27, 28, 29,.5)",
   green: '#1abc9c',
   red: '#ed4337',
   orange: 'orange',
@@ -30,9 +31,10 @@ export const colors = {
 };
 
 const breakpoints = createBreakpoints({
-  keys: ["xs", "sm", "md", "lg", "xl"],
+  keys: ["xs", "mm", "sm", "md", "lg", "xl"],
   values: {
     xs: 0,
+    mm: 300,
     sm: 600,
     md: 900,
     lg: 1200,
@@ -43,7 +45,7 @@ const breakpoints = createBreakpoints({
 const iswapTheme =  {
   typography: {
     fontFamily: [
-      '"Work Sans Thin"',
+      '"Rajdhani Medium"',
       'BlinkMacSystemFont',
       '"Segoe UI"',
       'Roboto',
@@ -55,32 +57,61 @@ const iswapTheme =  {
       '"Segoe UI Symbol"',
     ].join(','),
     h1: {
+      fontSize: '28px',
+      fontWeight: '600',
+      WebkitFontSmoothing: "antialiased",
+      MozOsxFontSmoothing: "grayscale",
+      letterSpacing: '0.5px',
+      lineHeight: 1.2,
+      color: colors.pricecolor,
+    },
+    h2: {
       fontSize: '24px',
       fontWeight: '600',
       WebkitFontSmoothing: "antialiased",
       MozOsxFontSmoothing: "grayscale",
-      lineHeight: 1.2
-    },
-    h2: {
-      fontSize: '20px',
-      fontWeight: '600',
-      WebkitFontSmoothing: "antialiased",
-      MozOsxFontSmoothing: "grayscale",
+      letterSpacing: '0.5px',
       lineHeight: 1.2,
       color: colors.blue
     },
     h3: {
-      fontSize: '16px',
-      fontWeight: '600',
+      fontSize: '18px',
+      fontWeight: '500',
+      WebkitFontSmoothing: "antialiased",
+      MozOsxFontSmoothing: "grayscale",
+      letterSpacing: '0.5px',
+      lineHeight: 1.2,
+      color: colors.pricecolor,
+    },
+    h4: {
+      fontSize: '20px',
+      fontWeight: '400',
       WebkitFontSmoothing: "antialiased",
       MozOsxFontSmoothing: "grayscale",
       lineHeight: 1.2,
+      letterSpacing: '0.5px',
+      color: colors.pricecolor,
+      '@media (max-width: 899px)': {
+        fontSize: '18px',
+      },
+    },
+    h5: {
+      fontSize: '16px',
+      fontWeight: '400',
+      letterSpacing: '0.5px',
+      WebkitFontSmoothing: "antialiased",
+      MozOsxFontSmoothing: "grayscale",
+      lineHeight: 1.2,
+      '@media (max-width: 899px)': {
+        fontSize: '14px',
+      },
     },
     h6: {
       fontSize: '12px',
-      fontWeight: '600',
+      fontWeight: '500',
       WebkitFontSmoothing: "antialiased",
       MozOsxFontSmoothing: "grayscale",
+      letterSpacing: '0.2px',
       lineHeight: 1.2,
       color: colors.darkGray
     },

@@ -15,12 +15,12 @@ const styles = theme => ({
     }
   },
   headerV2: {
-    background: colors.white,
+    background: colors.lightGray,
     borderBottom: '1px solid '+colors.borderBlue,
     width: '100%',
-    borderRadius: '12px',
+    borderRadius: '0px',
     display: 'flex',
-    padding: '24px 32px',
+    padding: '16px 32px',
     alignItems: 'center',
     justifyContent: 'center',
     [theme.breakpoints.down('sm')]: {
@@ -35,16 +35,20 @@ const styles = theme => ({
     cursor: 'pointer'
   },
   links: {
-    display: 'flex'
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   link: {
-    padding: '12px 0px',
     margin: '0px 12px',
     cursor: 'pointer',
+    borderBottom: "3px solid #EBBC25",
     '&:hover': {
-      paddingBottom: '9px',
-      borderBottom: "3px solid "+colors.borderBlue,
+      borderBottom: "3px solid "+colors.blue,
     },
+    [theme.breakpoints.down('sm')]: {
+      margin: '0px 4px',
+    }
   },
   title: {
     textTransform: 'capitalize'
@@ -53,8 +57,10 @@ const styles = theme => ({
     padding: '12px 0px',
     margin: '0px 12px',
     cursor: 'pointer',
-    paddingBottom: '9px',
-    borderBottom: "3px solid "+colors.borderBlue,
+    borderBottom: "3px solid "+colors.blue,
+    [theme.breakpoints.down('sm')]: {
+      margin: '0px 4px',
+    }
   },
   account: {
     display: 'flex',
@@ -100,7 +106,7 @@ const styles = theme => ({
     },
   },
   accountDetailsAddress: {
-    color: colors.lightGreen,
+    color: colors.background,
     fontWeight: 'bold',
     padding: '0px 12px',
     cursor: 'pointer',
@@ -110,30 +116,6 @@ const styles = theme => ({
       textDecoration: 'underline'
     }
   },
-    accountDetailsHeader: {
-    color: colors.lightGreen,
-    fontWeight: 'bold',
-    fontSize: '28px',
-    align: 'center',
-    marginTop: '10px',
-    padding: '0 0 0 20%',
-    cursor: 'pointer',
-   
-    alignItems: 'center',
-      },
-    accountDetailsHeader1: {
-    color: colors.lightGreen,
-    fontWeight: 'bold',
-    fontSize: '20px',
-    align: 'center',
-    marginTop: '10px',
-    padding: '0 0 0 5%',
-    cursor: 'pointer',
-   
-    alignItems: 'center',
-      },
-
-   
   accountDetailsBalance: {
     color: colors.background,
     fontWeight: 'bold',
@@ -171,13 +153,28 @@ class Header extends Component {
     return (
       <div className={ classes.root }>
         <div className={ classes.headerV2 }>
-          <div className={ classes.accountDetailsHeader }>
-           <hr />
-           Keep3rb Network BSC | Real time Price data from Oracle <br />
-           <hr />
-          </div>
-          <div className={ classes.accountDetailsHeader1 }>
-           <a href="https://keep3rb.network"><b> KEEP3RB.NETWORK </b></a>
+        <div className={ classes.icon }>
+            <img
+              alt=""
+              src={ require('../../assets/logo.png') }
+              height={ '37px' }
+              onClick={ () => { this.nav('') } }
+            />
+            <Typography variant={ 'h1'} className={ classes.name } onClick={ () => { this.nav('') } }>Keep3r BSC Network</Typography>
+        </div>
+          <div className={ classes.links }>
+            <div className={ classes.link } onClick={()=> window.open("https://keep3rb.network/kp3rb", "_blank")} >
+              <Typography variant={ 'h4'} >KP3RB</Typography>
+            </div>
+            <div className={ classes.link } onClick={()=> window.open("https://keep3rb.network/how-to-start", "_blank")} >
+              <Typography variant={ 'h4'} >How to Start</Typography>
+            </div>
+            <div className={ classes.link } onClick={()=> window.open("https://keep3rb.network/job-liquidity", "_blank")} >
+              <Typography variant={ 'h4'} >Job Liquidity</Typography>
+            </div>
+            <div className={ classes.link } onClick={()=> window.open("/", "_blank")} >
+              <Typography variant={ 'h4'} >Data</Typography>
+            </div>
           </div>
         </div>
       </div>

@@ -10,7 +10,6 @@ import Store from "../../stores";
 import { colors } from '../../theme'
 
 import {
-  ERROR,
   GET_FEEDS,
   FEEDS_RETURNED,
   FEEDS_UPDATED,
@@ -25,21 +24,22 @@ const styles = theme => ({
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     alignItems: 'center',
-    marginTop: '40px'
+    marginTop: '80px'
   },
   feedContainer: {
-    background: colors.lightBlue,
-    width: '360px',
-    height: '220px',
-    padding: '12px',
+    background: colors.lightGray,
+    width: '180px',
+    padding: '24px 8px',
+    minHeight: '280px',
     margin: '12px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: '12px',
+    borderRadius: '6px',
+    border: '1px solid rgba(235, 188, 37 , 0.9)',
     '&:hover': {
-      background: 'rgba(1,0,0,0.4)'
+      background: '#DBAB12'
     }
   },
   pricePoint: {
@@ -47,10 +47,29 @@ const styles = theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '6px 0px'
+    margin: '6px 0px',
+    color: colors.pricecolor,
+  },
+  updated: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: '24px',
+    marginBottom: '6px'
   },
   pair: {
-    marginBottom: '24px'
+    marginBottom: '6px'
+  },
+  volatilityHead: {
+    marginTop: '24px',
+    marginBottom: '6px'
+  },
+  volatility: {
+    margin: '6px 0px'
+  },
+  gray: {
+    color: colors.darkGray
   }
 })
 
@@ -115,19 +134,52 @@ class Feeds extends Component {
 
     return (
       <div className={ classes.feedContainer }>
-        { (!feed.token0 || !feed.token1) && <CircularProgress /> }
-        <div className={ classes.pair }>
-          { feed.token0 && feed.token1 && <Typography variant='h2'>{ feed.token0.symbol } / { feed.token1.symbol }</Typography> }
-        </div>
-        <div className={ classes.pricePoint }>
-          { feed.token0 && feed.token1 && <Typography variant='h3'>{ feed.consult && feed.consult.consult0To1 ? feed.consult.consult0To1.toFixed(4) : '0.00' } BNB</Typography> }
-        </div>
-        <div className={ classes.pricePoint }>
-          { feed.token0 && feed.token1 && <Typography variant='h3'>$ { feed.priceToken0 ? feed.priceToken0 : '0.00' } </Typography> }
-        </div>
-        <div className={ classes.pricePoint }>
-          { feed.lastUpdated && <Typography variant='h6'>Last updated: { moment(feed.lastUpdated*1000).fromNow() }</Typography> }
-        </div>
+        { (!feed.token0 || !feed.token1) && <CircularProgress className={ classes.absoluteCenter } /> }
+        { feed.token0 && feed.token1 &&
+          <div className={ classes.pair }>
+            <Typography variant='h2'> { feed.token0.symbol } / { feed.token1.symbol }</Typography>
+          </div>
+        }
+        { feed.token0 && feed.token1 &&
+          <div className={ classes.pricePoint }>
+            <Typography variant='h3'>{ feed.consult && feed.consult.consult0To1 ? feed.consult.consult0To1.toFixed(4) : '0.00' } { feed.token1.symbol }</Typography>
+          </div>
+        }
+        { feed.token0 && feed.token1 &&
+          <div className={ classes.pricePoint }>
+            <Typography variant='h3'>$ { feed.priceToken0 ? feed.priceToken0 : '0.00' } </Typography>
+          </div>
+        }
+        { feed.volatility &&
+          <div className={ classes.volatilityHead }>
+            <Typography variant='h2'>Volatility</Typography>
+          </div>
+        }
+        { feed.volatility && feed.volatility.realizedVolatility && (!feed.volatility.realizedVolatilityHourly && !feed.volatility.realizedVolatilityDaily && !feed.volatility.realizedVolatilityWeekly) &&
+          <div className={ classes.volatility }>
+            <Typography variant='h3'>{ feed.volatility.realizedVolatility.toFixed(2) }%</Typography>
+          </div>
+        }
+        { feed.volatility && feed.volatility.realizedVolatilityHourly &&
+          <div className={ classes.volatility }>
+            <Typography variant='h3'>Hourly: { feed.volatility.realizedVolatilityHourly.toFixed(2) }%</Typography>
+          </div>
+        }
+        { feed.volatility && feed.volatility.realizedVolatilityDaily &&
+          <div className={ classes.volatility }>
+            <Typography variant='h3'>Daily: { feed.volatility.realizedVolatilityDaily.toFixed(2) }%</Typography>
+          </div>
+        }
+        { feed.volatility && feed.volatility.realizedVolatilityWeekly &&
+          <div className={ classes.volatility }>
+            <Typography variant='h3'>Weekly: { feed.volatility.realizedVolatilityWeekly.toFixed(2) }%</Typography>
+          </div>
+        }
+        { feed.lastUpdated &&
+          <div className={ classes.updated }>
+            <Typography variant='h6'>Last updated: { moment(feed.lastUpdated*1000).fromNow() }</Typography>
+          </div>
+        }
       </div>
     )
   }

@@ -3,7 +3,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 
 import interestTheme from './theme';
-import { colors } from './theme';
 
 import Footer from './components/footer';
 import Feeds from './components/feeds';
@@ -22,7 +21,8 @@ class App extends Component {
             flexDirection: 'column',
             minHeight: '100vh',
             alignItems: 'center',
-            background: colors.white
+            background: '#574630',
+            color: '#fff',
           }}>
             <Header />
             <Feeds />
