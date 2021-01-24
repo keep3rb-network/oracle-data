@@ -31,7 +31,7 @@ class Store {
           address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
           decimals: "18",
           symbol: "WBNB",
-          price_id: 'wbnb',
+          price_id: 'binance-coin',
         },
         {
           address: "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d",
@@ -59,16 +59,16 @@ class Store {
           price_id: 'binance-usd',
         },
         {
-          address: "0x1092E4F72a9D7a28418351D029e273906aF24797",
+          address: "0x5EA29eEe799aA7cC379FdE5cf370BC24f2Ea7c81",
           decimals: "18",
           symbol: "KP3RB",
-          price_id: 'uniswap',
+          price_id: 'keep3r-bsc-network',
         },
         {
           address: "0xaDD8A06fd58761A5047426e160B2B88AD3B9D464",
           decimals: "18",
           symbol: "CHS",
-          price_id: 'pancakeswap',
+          price_id: 'cheeseswap',
         },
         ],
       priceFeeds: [
@@ -208,7 +208,7 @@ class Store {
           decimals: await token1Contract.methods.decimals().call({})
         }
       }
-      if (token0.symbol === "WETH") {
+      if (token0.symbol === "WBNB") {
         return {
           token0: token1,
           token1: token0
@@ -309,7 +309,7 @@ class Store {
 
   _getUSDPrices = async () => {
     try {
-      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,usd-coin,true-usd,tether,yearn-finance,wrapped-bitcoin,ethereum,aave,uniswap,compound-governance-token,maker,havven,keep3rb,link&vs_currencies=usd'
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,binance-coin,tether,usd-coin,cheeseswap,keep3r-bsc-network,link&vs_currencies=usd'
       const priceString = await rp(url);
       const priceJSON = JSON.parse(priceString)
 
