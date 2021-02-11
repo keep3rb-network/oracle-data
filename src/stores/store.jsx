@@ -309,7 +309,7 @@ class Store {
 
   _getUSDPrices = async () => {
     try {
-      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,binance-coin,tether,usd-coin,cheeseswap,keep3r-bsc-network,link&vs_currencies=usd'
+      const url = 'https://api.coingecko.com/api/v3/simple/price?ids=dai,binance-coin,binance-usd,tether,usd-coin,cheeseswap,keep3r-bsc-network,link&vs_currencies=usd'
       const priceString = await rp(url);
       const priceJSON = JSON.parse(priceString)
 
